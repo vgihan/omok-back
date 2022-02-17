@@ -4,6 +4,7 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UserRepository } from './user.repository';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
@@ -25,7 +27,9 @@ export class AuthService {
 
     if (user && (await compare(password, user.password))) {
       const payload = { id };
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
 
       return { token };
     } else {
