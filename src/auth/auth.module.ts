@@ -9,9 +9,8 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: ' jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'vgihan_secret',
       signOptions: {
         expiresIn: 60 * 60,
       },
