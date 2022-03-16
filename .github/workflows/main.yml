@@ -25,4 +25,5 @@ jobs:
             git rebase origin/main
             yarn
             yarn run build
+            pm2 kill
             yarn start:prod
