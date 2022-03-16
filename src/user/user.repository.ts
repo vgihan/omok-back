@@ -6,25 +6,27 @@ import { hash, genSalt } from 'bcrypt';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async createUser(authCredentialsDto: AuthCredentialsDto) {
     const { id, password } = authCredentialsDto;
     const salt = await genSalt();
     const encryptedPassword = await hash(password, salt);
     const keys = ['id', 'password', 'rating', 'win_num', 'lose_num', 'profile'];
 
     try {
-      await this.createQueryBuilder()
-        .insert()
-        .into(User, keys)
-        .values({
-          id,
-          password: encryptedPassword,
-          rating: 1000,
-          win_num: 0,
-          lose_num: 0,
-          profile: null,
-        })
-        .execute();
+      return (
+        await this.createQueryBuilder()
+          .insert()
+          .into(User, keys)
+          .values({
+            id,
+            password: encryptedPassword,
+            rating: 1000,
+            win_num: 0,
+            lose_num: 0,
+            profile: null,
+          })
+          .execute()
+      ).identifiers[0];
     } catch (error) {
       if (error.errno === 1062) {
         throw new ConflictException('이미 존재하는 ID입니다.');

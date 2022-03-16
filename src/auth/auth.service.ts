@@ -15,13 +15,11 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(authCredentialsDto: AuthCredentialsDto) {
     return this.userRepository.createUser(authCredentialsDto);
   }
 
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ token: string }> {
+  async signIn(authCredentialsDto: AuthCredentialsDto) {
     const { id, password } = authCredentialsDto;
     const user = await this.userRepository.findOne({ id });
 
